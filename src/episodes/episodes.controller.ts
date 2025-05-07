@@ -7,14 +7,22 @@ import {
   Body,
   HttpException,
   NotFoundException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { EpisodesService } from './episodes.service';
 import { HttpStatus } from '@nestjs/common';
+import { DefaultValuePipe } from '@nestjs/common';
+import { IsPositivePipe } from 'src/is-positive/is-positive.pipe';
+
 @Controller('episodes')
 export class EpisodesController {
   constructor(private episodeService: EpisodesService) {}
   @Get()
-  findAll(@Query('sort') sort: 'asc' | 'desc' = 'desc') {
+  findAll(
+    @Query('sort') sort: 'asc' | 'desc' = 'desc',
+    @Query('limit', new DefaultValuePipe(100), ParseIntPipe, IsPositivePipe)
+    limit: number,
+  ) {
     console.log(sort);
     return 'All episodes';
   }
